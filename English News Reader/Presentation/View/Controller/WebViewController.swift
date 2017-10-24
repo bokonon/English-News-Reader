@@ -267,6 +267,10 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     // show select Language ActionSheet
     func showSelectLanguageActionSheet() {
         let alert: UIAlertController = getAlertAction("Select language for translate")
+        
+        alert.popoverPresentationController?.sourceView = self.view
+        alert.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        alert.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
 
         let cancelAction:UIAlertAction = getCancelActionSheet(self.languageButton)
         alert.addAction(cancelAction)

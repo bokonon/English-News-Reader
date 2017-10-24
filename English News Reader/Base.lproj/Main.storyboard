@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -212,23 +212,30 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
-                            <view alpha="0.80000000000000004" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ega-Vq-PHt" userLabel="Tutorial View">
+                            <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ega-Vq-PHt" userLabel="Tutorial View">
                                 <rect key="frame" x="0.0" y="60" width="375" height="563"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="finger" translatesAutoresizingMaskIntoConstraints="NO" id="HEp-nO-tv4">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="finger" translatesAutoresizingMaskIntoConstraints="NO" id="HEp-nO-tv4">
                                         <rect key="frame" x="67" y="175" width="240" height="212"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="212" id="5bw-CQ-EG9"/>
+                                        </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Long tap for translatiton" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e6j-PZ-Yzq">
-                                        <rect key="frame" x="61" y="127" width="252" height="29"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long tap for translatiton" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e6j-PZ-Yzq">
+                                        <rect key="frame" x="64.5" y="127" width="245.5" height="29"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="HEp-nO-tv4" firstAttribute="centerY" secondItem="Ega-Vq-PHt" secondAttribute="centerY" id="1YQ-a9-q4L"/>
+                                    <constraint firstItem="HEp-nO-tv4" firstAttribute="leading" secondItem="Ega-Vq-PHt" secondAttribute="leading" constant="67" id="2Lt-V5-FCr"/>
+                                    <constraint firstItem="HEp-nO-tv4" firstAttribute="centerX" secondItem="Ega-Vq-PHt" secondAttribute="centerX" id="LmF-8N-fjA"/>
+                                    <constraint firstItem="HEp-nO-tv4" firstAttribute="top" secondItem="e6j-PZ-Yzq" secondAttribute="bottom" constant="19" id="ZyO-ym-2Fz"/>
+                                    <constraint firstItem="HEp-nO-tv4" firstAttribute="centerX" secondItem="e6j-PZ-Yzq" secondAttribute="centerX" id="s9T-8i-U9B"/>
+                                </constraints>
                             </view>
                             <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eRg-5I-ZfF" userLabel="Translate View">
                                 <rect key="frame" x="0.0" y="495" width="375" height="128"/>
@@ -289,7 +296,7 @@
                                             <action selector="forwardPage:" destination="taj-1s-gRE" id="Zo6-jI-e3v"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem width="203" style="plain" systemItem="fixedSpace" id="4Xw-He-vEb"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="UT3-ox-aj3"/>
                                     <barButtonItem systemItem="refresh" id="cTd-PQ-owy">
                                         <connections>
                                             <action selector="reload:" destination="taj-1s-gRE" id="EMc-gL-Dba"/>
@@ -304,12 +311,16 @@
                             <constraint firstItem="Igw-hc-bEF" firstAttribute="leading" secondItem="a0G-Pz-U5R" secondAttribute="leading" id="0gD-6A-BfA"/>
                             <constraint firstAttribute="trailing" secondItem="Igw-hc-bEF" secondAttribute="trailing" id="8sO-T2-FEB"/>
                             <constraint firstAttribute="trailing" secondItem="Q3e-lx-MEL" secondAttribute="trailing" id="G5A-I8-hE9"/>
+                            <constraint firstItem="Ega-Vq-PHt" firstAttribute="trailing" secondItem="Igw-hc-bEF" secondAttribute="trailing" id="P9E-dd-iY0"/>
+                            <constraint firstItem="Ega-Vq-PHt" firstAttribute="top" secondItem="a0G-Pz-U5R" secondAttribute="topMargin" constant="-4" id="Rwe-ed-ShP"/>
                             <constraint firstItem="Q3e-lx-MEL" firstAttribute="leading" secondItem="a0G-Pz-U5R" secondAttribute="leading" id="cDH-YT-dAy"/>
                             <constraint firstItem="eRg-5I-ZfF" firstAttribute="leading" secondItem="a0G-Pz-U5R" secondAttribute="leading" id="hbc-4u-Pc5"/>
                             <constraint firstItem="Igw-hc-bEF" firstAttribute="top" secondItem="MAd-ta-qJK" secondAttribute="bottom" id="jIk-SM-lFh"/>
                             <constraint firstAttribute="trailing" secondItem="eRg-5I-ZfF" secondAttribute="trailing" id="l7F-6W-6qU"/>
                             <constraint firstItem="4PR-kf-ySg" firstAttribute="top" secondItem="Q3e-lx-MEL" secondAttribute="bottom" id="nUy-2K-DS5"/>
+                            <constraint firstItem="Ega-Vq-PHt" firstAttribute="leading" secondItem="Igw-hc-bEF" secondAttribute="leading" id="tj5-Kd-Dvq"/>
                             <constraint firstItem="Q3e-lx-MEL" firstAttribute="top" secondItem="eRg-5I-ZfF" secondAttribute="bottom" id="wId-qh-l3X"/>
+                            <constraint firstItem="Ega-Vq-PHt" firstAttribute="bottom" secondItem="Q3e-lx-MEL" secondAttribute="top" id="xeE-gN-kFz"/>
                             <constraint firstItem="Q3e-lx-MEL" firstAttribute="top" secondItem="Igw-hc-bEF" secondAttribute="bottom" id="y1L-mF-lKC"/>
                         </constraints>
                     </view>
