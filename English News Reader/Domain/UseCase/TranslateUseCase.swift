@@ -12,8 +12,6 @@ class TranslateUseCase {
     
     let request: Request = Request()
     
-    /// Public Method
-    
     func translate(text: String, to: String, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
         self.getToken(text: text) { (token, error) in
             if error != nil {
@@ -29,8 +27,6 @@ class TranslateUseCase {
             }
         }
     }
-    
-    /// Private Method
     
     private func getToken(text: String, completion: @escaping (_ token: String?, _ error: ApiError?) -> Void) {
         let url: URL = URL(string: ApiConstants.tokenUrl)!

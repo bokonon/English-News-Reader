@@ -10,47 +10,47 @@ import Foundation
 
 class Parser {
     
-    func parseData(results: NSArray) -> Array<NewYorkTimesModel> {
-        var models: Array<NewYorkTimesModel> = [NewYorkTimesModel]()
+    func parseData(results: NSArray) -> Array<NewsApiModel> {
+        var models: Array<NewsApiModel> = [NewsApiModel]()
         for result in results {
-            let model: NewYorkTimesModel = NewYorkTimesModel()
-            let dictionary = result as! NSDictionary
             
-            if let id = dictionary["_id"] as? NSString {
-                model._id = id
-            }
-            if let headline = dictionary["headline"] as? NSDictionary {
-                if let main = headline["main"] as? NSString {
-                    model.headline.main = main
+            var model: NewsApiModel = NewsApiModel(author: "", content: "", description: "", publishedAt: "", source: NewsApiModel.Source(id: "", name: ""), title: "", url: "", urlToImage: "")
+            
+            if let dictionary = result as? NSDictionary {
+                if let author = dictionary["author"] as? String {
+                    model.author = author
                 }
-                if let print_headline = headline["print_headline"] as? NSString {
-                    model.headline.print_headline = print_headline
+                if let content = dictionary["content"] as? String {
+                    model.content = content
                 }
-            }
-            if let abstract = dictionary["abstract"] as? NSString {
-                model.abstract = abstract
-            }
-            if let lead_paragraph = dictionary["lead_paragraph"] as? NSString {
-                model.lead_paragraph = lead_paragraph
-            }
-            if let news_desk = dictionary["news_desk"] as? NSString {
-                model.news_desk = news_desk
-            }
-            if let pub_date = dictionary["pub_date"] as? NSString {
-                model.pub_date = getFormatedDate(srcDate: pub_date as String) as NSString
-            }
-            if let snippet = dictionary["snippet"] as? NSString {
-                model.snippet = snippet
-            }
-            if let type_of_material = dictionary["type_of_material"] as? NSString {
-                model.type_of_material = type_of_material
-            }
-            if let web_url = dictionary["web_url"] as? NSString {
-                model.web_url = web_url
+                if let description = dictionary["description"] as? String {
+                    model.description = description
+                }
+                if let publishedAt = dictionary["publishedAt"] as? String {
+//                    model.publishedAt = publishedAt
+                    model.publishedAt = getFormatedDate(srcDate: publishedAt)
+                }
+                
+                if let sourceDic = dictionary["source"] as? NSDictionary {
+                    if let id = sourceDic["id"] as? String {
+                        model.source.id = id
+                    }
+                    if let name = sourceDic["name"] as? String {
+                        model.source.name = name
+                    }
+                }
+                if let title = dictionary["title"] as? String {
+                    model.title = title
+                }
+                if let url = dictionary["url"] as? String {
+                    model.url = url
+                }
+                if let urlToImage = dictionary["urlToImage"] as? String {
+                    model.urlToImage = urlToImage
+                }
+                print("dictionary : ", "\(dictionary)")
             }
             models.append(model)
-            
-            print("dictionary : ", "\(dictionary)")
         }
         return models
     }

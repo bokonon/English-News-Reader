@@ -9,7 +9,7 @@
 import Foundation
 
 struct ApiConstants {
-    static let newsUrl = "http://api.nytimes.com/svc/search/v2/articlesearch.json"
+    static let newsUrl = "https://newsapi.org/v2/top-headlines"
     static let tokenUrl = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
     static let translateUrl = "https://api.microsofttranslator.com/V2/Http.svc/Translate"
     

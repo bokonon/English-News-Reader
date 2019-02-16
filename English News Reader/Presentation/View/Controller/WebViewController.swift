@@ -164,7 +164,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         webView.evaluateJavaScript(script, completionHandler: { (html, error) -> Void in
             if let text = html as? String {
                 print("text : ", text)
-                if 0 < text.characters.count {
+                if 0 < text.count {
                     self.showTranslateView(text)
                 } else {
                     if !self.translateView.isHidden {
@@ -205,7 +205,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
         translateView.center = CGPoint(x: translateView.center.x,y: self.webView.frame.height + self.translateView.frame.height/2);
         translateView.isHidden = false
 
-        UIView.animate(withDuration: TimeInterval(CGFloat(0.6)),
+        UIView.animate(withDuration: TimeInterval(CGFloat(0.4)),
                        animations: {() -> Void in
                         // translate to
                         self.translateView.center = CGPoint(x: self.translateView.center.x,
@@ -217,7 +217,7 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
     }
     
     func hideTranslateView() {
-        UIView.animate(withDuration: TimeInterval(CGFloat(0.6)),
+        UIView.animate(withDuration: TimeInterval(CGFloat(0.4)),
                        animations: {() -> Void in
 
                         // translate to

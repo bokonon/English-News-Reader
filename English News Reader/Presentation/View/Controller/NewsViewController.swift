@@ -12,7 +12,7 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     
-    var newYorkTimesModels:[NewYorkTimesModel] = [NewYorkTimesModel]()
+    var newsApiModels:[NewsApiModel] = [NewsApiModel]()
     
     var currentPage: Int = 0
     
@@ -58,20 +58,20 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("newYorkTimesModels.count", newYorkTimesModels.count)
-        return newYorkTimesModels.count
+        print("newsApiModels.count", newsApiModels.count)
+        return newsApiModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: NewYorkTimesModelCell = tableView.dequeueReusableCell(withIdentifier: "NewYorkTimesModelCell", for: indexPath) as! NewYorkTimesModelCell
+        let cell: NewsApiModelCell = tableView.dequeueReusableCell(withIdentifier: "NewsApiModelCell", for: indexPath) as! NewsApiModelCell
         
-        print("newYorkTimesModels.count", newYorkTimesModels.count)
+        print("newsApiModels.count", newsApiModels.count)
         print("indexPath.row", indexPath.row)
         
-        cell.setCell(model: newYorkTimesModels[indexPath.row])
+        cell.setCell(model: newsApiModels[indexPath.row])
         
         // when cell is almost last
-        if(newYorkTimesModels.count - 1 <= indexPath.row) {
+        if(newsApiModels.count - 1 <= indexPath.row) {
             readMore()
         }
         
@@ -86,11 +86,12 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
         indicator.startAnimating()
         presenter.getNews(currentPage: currentPage) { result, error in
             if error != nil {
+                print("error on get news : \(error!)")
                 // show error message
                 self.indicator.stopAnimating()
             } else if result != nil {
                 print("append")
-                self.newYorkTimesModels.append(contentsOf: result!)
+                self.newsApiModels.append(contentsOf: result!)
             }
             DispatchQueue.global(qos: .default).async {
                 DispatchQueue.main.async {
@@ -112,17 +113,16 @@ class NewsViewController: UIViewController, UITableViewDelegate, UITableViewData
     @objc func refresh(sender: UIRefreshControl) {
         print("refresh")
         currentPage = 0
-        newYorkTimesModels.removeAll()
+        newsApiModels.removeAll()
         tableView.reloadData()
         self.getNews(currentPage: currentPage)
     }
     
     func tableView(_ table: UITableView,didSelectRowAt indexPath: IndexPath) {
         print("performSegue")
-        if let url = newYorkTimesModels[indexPath.row].web_url as String! {
-            print(url)
-            webViewUrl = URL(string: url)
-        }
+        let url = newsApiModels[indexPath.row].url
+        print(url)
+        webViewUrl = URL(string: url)
         // lanch webview
         performSegue(withIdentifier: "segue_for_webview", sender: self)
     }

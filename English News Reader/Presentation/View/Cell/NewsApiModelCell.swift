@@ -8,11 +8,11 @@
 
 import UIKit
 
-class NewYorkTimesModelCell: UITableViewCell {
+class NewsApiModelCell: UITableViewCell {
     
-    @IBOutlet weak var headline_main: UILabel!
-    @IBOutlet weak var snippet: UILabel!
-    @IBOutlet weak var pub_date: UILabel!
+    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var desc: UILabel!
+    @IBOutlet weak var publishedAt: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,9 +27,9 @@ class NewYorkTimesModelCell: UITableViewCell {
         
     }
     
-    func setCell(model :NewYorkTimesModel) {
-        self.headline_main!.text = model.headline.main as String
-        self.snippet!.text = model.snippet as String
-        self.pub_date!.text = model.pub_date as String
+    func setCell(model :NewsApiModel) {
+        self.title!.text = model.title as String
+        self.desc!.text = model.description as String
+        self.publishedAt!.text = model.publishedAt as String
     }
 }

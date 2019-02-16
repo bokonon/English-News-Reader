@@ -60,7 +60,7 @@ class Request: NSObject, XMLParserDelegate {
     
     /// Public Method
     
-    func getNews(url: URL, parameters: [String: AnyObject], completion: @escaping (_ result: Array<NewYorkTimesModel>?, _ error: ApiError?) -> Void) {
+    func getNews(url: URL, parameters: [String: AnyObject], completion: @escaping (_ result: Array<NewsApiModel>?, _ error: ApiError?) -> Void) {
         
         let parameterString = parameters.stringFromHttpParameters()
         let requestURL = URL(string: url.absoluteString + "?" + parameterString)!
@@ -76,8 +76,7 @@ class Request: NSObject, XMLParserDelegate {
                     if data != nil {
                         do {
                             let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
-                            let response:NSDictionary = json.object(forKey: "response") as! NSDictionary
-                            let results:NSArray = response.object(forKey: "docs") as! NSArray
+                            let results: NSArray = json.object(forKey: "articles") as! NSArray
                             completion(Parser().parseData(results: results), nil)
                         } catch {
                             completion(nil, ApiError.parseError)
