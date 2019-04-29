@@ -10,26 +10,26 @@ import UIKit
 
 class NewsApiModelCell: UITableViewCell {
     
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var desc: UILabel!
-    @IBOutlet weak var publishedAt: UILabel!
+  @IBOutlet weak var title: UILabel!
+  @IBOutlet weak var desc: UILabel!
+  @IBOutlet weak var publishedAt: UILabel!
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // Initialization code
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        
-        print("NewYorkTimesModelCell awakeFromNib")
-    }
+    print("NewYorkTimesModelCell awakeFromNib")
+  }
+  
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+    // Configure the view for the selected state
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
-        
-    }
-    
-    func setCell(model :NewsApiModel) {
-        self.title!.text = model.title as String
-        self.desc!.text = model.description as String
-        self.publishedAt!.text = model.publishedAt as String
-    }
+  }
+  
+  func setCell(model :NewsApiModel) {
+    self.title!.text = model.title as String
+    self.desc!.text = model.description as String
+    self.publishedAt!.text = model.publishedAt as String
+  }
 }

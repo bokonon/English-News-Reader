@@ -10,12 +10,12 @@ import Foundation
 
 class HistoryViewControllerPresenter {
     
-    func getHistory() -> [TranslateHistory] {
-        return TranslateHistoryDao.sharedInstance.findAll()
-    }
-    
-    func delete(originalText: String) {
-        TranslateHistoryDao.sharedInstance.delete(originalText)
-    }
+  func getHistory() -> [TranslateHistory] {
+    return TranslateHistoryDao.sharedInstance.findAll()
+  }
+  
+  func delete(originalText: String) {
+    TranslateHistoryDao.sharedInstance.delete(originalText)
+  }
     
 }

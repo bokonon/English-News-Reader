@@ -10,18 +10,14 @@ import Foundation
 
 class WebViewControllerPresenter {
     
-    func translate(text: String, to: String, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
-        TranslateUseCase().translate(text: text, to: to) { text, error in
-            if error != nil {
-                completion(nil, error)
-            } else if text != nil {
-                completion(text!, nil)
-            }
-        }
+  func translate(text: String, to: String, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
+    TranslateUseCase().translate(text: text, to: to) { text, error in
+      completion(text!, error)
     }
-    
-    func saveHistory(_ originalText: String, translatedText: String) {
-        TranslateHistoryDao.sharedInstance.insert(originalText, translatedText: translatedText)
-    }
+  }
+  
+  func saveHistory(_ originalText: String, translatedText: String) {
+    TranslateHistoryDao.sharedInstance.insert(originalText, translatedText: translatedText)
+  }
     
 }
