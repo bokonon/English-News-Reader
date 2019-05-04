@@ -13,6 +13,7 @@ struct ApiConstants {
   static let tokenUrl = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
   static let translateUrl = "https://api.microsofttranslator.com/V2/Http.svc/Translate"
   
+  // for post
   static let apiKeyField = "Ocp-Apim-Subscription-Key"
   static let getNewsApiKey = "GetNewsApiKey1"
   static let translateApiKey1 = "TranslateApiKey1"
@@ -34,4 +35,21 @@ enum ApiError: Error {
   case parseError
   case internalError
   case unknownError
+}
+
+extension ApiError: LocalizedError{
+  var errorDescription:String? {
+    switch self {
+    case .requestError:
+      return "request param is invalid"
+    case .responseError:
+      return "response value is invalid"
+    case .parseError:
+      return "parse failed"
+    case .internalError:
+      return "requied param is not enough"
+    case .unknownError:
+      return "unknown error"
+    }
+  }
 }

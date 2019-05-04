@@ -93,7 +93,7 @@ class WebViewController: UIViewController {
   
   @objc func translate() {
     let script = "window.getSelection().toString();"
-    webView.evaluateJavaScript(script, completionHandler: { (html, error) -> Void in
+    webView.evaluateJavaScript(script, completionHandler: { (html, error) in
       if let text = html as? String {
         print("text : ", text)
         if 0 < text.count {
@@ -165,74 +165,72 @@ class WebViewController: UIViewController {
   
   func translate(_ srcText: String, label: UILabel) {
     self.startIndicator(destinationLabel)
-    presenter.translate(text: srcText, to: toLanguage) { [unowned self] text, error in
-      self.stopIndicator()
-      if error != nil {
-        self.updateLabel(label: label, text: ErrorMessageConstants.translateErrorMessage)
-      } else if text != nil {
-        self.updateLabel(label: label, text: text!)
-        if (text! != "") {
+    presenter.translate(text: srcText, to: toLanguage)
+      .onSuccess { [unowned self] text in
+        self.stopIndicator()
+        label.text = text
+        if (text != "") {
           // save data
-          self.presenter.saveHistory(srcText, translatedText: text!)
+          self.presenter.saveHistory(srcText, translatedText: text)
         }
-      }
+      }.onFailure { [unowned self] error in
+        self.stopIndicator()
+        label.text = error.localizedDescription
     }
   }
   
   func startIndicator(_ targetView: UIView) {
-      loadingIndicator.center.x = targetView.frame.width/2
-      loadingIndicator.center.y = targetView.center.y;
-      loadingIndicator.hidesWhenStopped = true
-      loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-      loadingIndicator.startAnimating();
-    
-      targetView.addSubview(loadingIndicator)
+    loadingIndicator.center.x = targetView.frame.width/2
+    loadingIndicator.center.y = targetView.center.y;
+    loadingIndicator.hidesWhenStopped = true
+    loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+    loadingIndicator.startAnimating();
+  
+    targetView.addSubview(loadingIndicator)
   }
   
   func stopIndicator() {
-      DispatchQueue.main.async(){
-        self.loadingIndicator.stopAnimating()
-      }
+    loadingIndicator.stopAnimating()
   }
   
   // show select Language ActionSheet
   func showSelectLanguageActionSheet() {
-      let alert: UIAlertController = getAlertAction("Select language for translate")
-    
-      alert.popoverPresentationController?.sourceView = self.view
-      alert.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-      alert.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+    let alert: UIAlertController = getAlertAction("Select language for translate")
+  
+    alert.popoverPresentationController?.sourceView = self.view
+    alert.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+    alert.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
 
-      let cancelAction:UIAlertAction = getCancelActionSheet(self.languageButton)
-      alert.addAction(cancelAction)
+    let cancelAction:UIAlertAction = getCancelActionSheet(self.languageButton)
+    alert.addAction(cancelAction)
 
-      let items: [String] = LanguageUtil.getKeys()
-      var i = 0
-      for item in items {
-        let itemAction:UIAlertAction = getActionSheet(self.languageButton, title: item, key: "to_language", position: i)
-        alert.addAction(itemAction)
-        i += 1
-      }
+    let items: [String] = LanguageUtil.getKeys()
+    var i = 0
+    for item in items {
+      let itemAction:UIAlertAction = getActionSheet(self.languageButton, title: item, key: "to_language", position: i)
+      alert.addAction(itemAction)
+      i += 1
+    }
 
-      present(alert, animated: true, completion: nil)
+    present(alert, animated: true, completion: nil)
   }
   
   // return action sheet
   func getAlertAction(_ title: String) -> UIAlertController {
-      return UIAlertController(title:title,
-                               message: "",
-                               preferredStyle: UIAlertControllerStyle.actionSheet)
+    return UIAlertController(title:title,
+                             message: "",
+                             preferredStyle: UIAlertControllerStyle.actionSheet)
   }
   
   // return cancel action sheet
   func getCancelActionSheet(_ barButton: UIBarButtonItem) -> UIAlertAction {
-      return UIAlertAction(title: "Cancel",
-                           style: UIAlertActionStyle.cancel,
-                           handler:{
-                            (action:UIAlertAction!) -> Void in
-                            print("Cancel")
-                            // do nothing
-      })
+    return UIAlertAction(title: "Cancel",
+                         style: UIAlertActionStyle.cancel,
+                         handler:{
+                          (action:UIAlertAction!) -> Void in
+                          print("Cancel")
+                          // do nothing
+    })
   }
   
   // return alert action
@@ -260,12 +258,6 @@ class WebViewController: UIViewController {
   @objc func tutorialTapped(_ gesture: UITapGestureRecognizer) {
     hideTranslateView()
     tutorialView.isHidden = true
-  }
-  
-  func updateLabel(label: UILabel, text: String) {
-    DispatchQueue.main.async(){
-      label.text = text
-    }
   }
     
 }

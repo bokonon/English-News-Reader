@@ -8,23 +8,30 @@
 
 import Foundation
 
+import BrightFutures
+
 class GetNewsUseCase {
     
   let request: Request = Request()
   
-  func getNews(currentPage: Int, completion: @escaping (_ result: Array<NewsApiModel>?, _ error: ApiError?) -> Void) {
-    
+  func getNews() -> Future<[Article], ApiError> {
+    let promise = Promise<[Article], ApiError>()
     if let apiKey = KeyManager().getValue(key: ApiConstants.getNewsApiKey) as? String {
       let url: URL = URL(string: ApiConstants.newsUrl)!
-      let params: [String: String] = [
-          "page": String(currentPage),
-          "country": "us",
-          "apiKey": apiKey
+      let parameters: [String: String] = [
+        "country": "us",
+        "apiKey": apiKey
       ]
-      request.getNews(url: url, parameters: params as [String : AnyObject], completion: completion)
+      request.getNews(url: url, parameters: parameters as [String : AnyObject])
+        .onSuccess(DispatchQueue.main.context) { articles in
+          promise.success(articles)
+        }.onFailure(DispatchQueue.main.context) { error in
+          promise.failure(error)
+      }
     } else {
-      completion(nil, ApiError.internalError)
+      promise.failure(ApiError.internalError)
     }
+    return promise.future
   }
     
 }

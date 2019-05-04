@@ -8,6 +8,9 @@
 
 import Foundation
 
+import Alamofire
+import BrightFutures
+
 extension String {
     
   /// Percent escapes values to be added to a URL query as specified in RFC 3986
@@ -51,6 +54,12 @@ extension Dictionary {
     
 }
 
+struct NewResponseObject: Codable {
+  var status: String
+  var totalResults: Int
+  var articles: [Article]
+}
+
 class Request: NSObject, XMLParserDelegate {
     
   let session: URLSession = URLSession.shared
@@ -59,139 +68,140 @@ class Request: NSObject, XMLParserDelegate {
   
   /// Public Method
   
-  func getNews(url: URL, parameters: [String: AnyObject], completion: @escaping (_ result: Array<NewsApiModel>?, _ error: ApiError?) -> Void) {
+  func getNews(url: URL, parameters: [String: AnyObject]) -> Future<[Article], ApiError> {
+    let promise = Promise<[Article], ApiError>()
     
     let parameterString = parameters.stringFromHttpParameters()
     let requestURL = URL(string: url.absoluteString + "?" + parameterString)!
-  
-    self.get(url: requestURL, completionHandler: { data, response, error in
-      if error != nil {
-        print("\(error! as Error)")
-        completion(nil, ApiError.requestError)
-      } else if let httpResponse = response as? HTTPURLResponse {
-        print("\(httpResponse)")
-        if 200 <= httpResponse.statusCode
-            && httpResponse.statusCode < 300 {
-          if data != nil {
-            do {
-              let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
-              let results: NSArray = json.object(forKey: "articles") as! NSArray
-              completion(Parser().parseData(results: results), nil)
-            } catch {
-              completion(nil, ApiError.parseError)
-            }
-          } else {
-            completion(nil, ApiError.unknownError)
-          }
-        } else {
-          completion(nil, ApiError.responseError)
-        }
+    
+    Alamofire.request(requestURL).responseJSON { response in
+      guard let result = response.data else {
+        promise.failure(ApiError.unknownError)
+        print("unknownError")
+        return
       }
-    })
+
+      if let error = response.result.error as? AFError {
+        print("\(error)")
+        promise.failure(ApiError.responseError)
+        return
+      }
+      
+      do {
+        let newsApiModels = try JSONDecoder().decode(NewResponseObject.self, from: result)
+//        print("newsApiModels: \(newsApiModels)")
+        promise.success(newsApiModels.articles)
+      } catch {
+        promise.failure(ApiError.parseError)
+        print("error: \(error)")
+      }
+      
+    }
+    return promise.future
   }
   
-  func getToken(url: URL, body: NSMutableDictionary, completion: @escaping (_ token: String?, _ error: ApiError?) -> Void) {
+  func getToken(url: URL) -> Future<String, ApiError> {
+    let promise = Promise<String, ApiError>()
     
     if let apiKey = KeyManager().getValue(key: ApiConstants.translateApiKey1) as? String {
-        let header: [String: String] = [
-          apiKey: ApiConstants.apiKeyField,
-          "application/json": "Content-Type",
-          "Content-Type": "Accept"
-        ]
-        do {
-          try self.post(url: url, header: NSMutableDictionary(dictionary: header), body: body, completionHandler: { data, response, error in
-            if error != nil {
-              print("\(error! as Error)")
-              completion(nil, ApiError.requestError)
-            } else if let httpResponse = response as? HTTPURLResponse {
-              print("\(httpResponse)")
-              if 200 <= httpResponse.statusCode
-                  && httpResponse.statusCode < 300 {
-                  if data != nil {
-                    let token = String(data: data!, encoding: .utf8)!
-                    print(token)
-                    completion(token, nil)
-                  } else {
-                    completion(nil, ApiError.unknownError)
-                  }
-              } else {
-                completion(nil, ApiError.responseError)
-              }
-            }
-          })
-        } catch {
-          completion(nil, ApiError.unknownError)
+      let headers: HTTPHeaders = [
+        ApiConstants.apiKeyField: apiKey,
+        "Content-Type" : "application/json",
+        "Accept" : "Content-Type"
+      ]
+      
+      Alamofire.request(url, method: .post, parameters: nil, encoding: JSONEncoding.default, headers: headers).response { response in
+      
+//        print("token response: \(response)")
+        
+        guard let result = response.data else {
+          promise.failure(ApiError.unknownError)
+          print("unknownError")
+          return
         }
+        
+        if let token = String(data: result, encoding: .utf8) {
+          print("token: \(token)")
+          promise.success(token)
+        } else {
+          promise.failure(ApiError.parseError)
+        }
+        
+      }
     } else {
-      completion(nil, ApiError.internalError)
+      promise.failure(ApiError.internalError)
     }
+    return promise.future
   }
   
-  func translate(url: URL, parameters: [String: AnyObject], completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
+  func translate(url: URL, parameters: [String: AnyObject]) -> Future<String, ApiError> {
+    let promise = Promise<String, ApiError>()
     let parameterString = parameters.stringFromHttpParameters()
     let requestURL = URL(string: url.absoluteString + "?" + parameterString)!
   
-    self.get(url: requestURL, completionHandler: { data, response, error in
-      if error != nil {
-        print("\(error! as Error)")
-        completion(nil, ApiError.requestError)
-      } else if let httpResponse = response as? HTTPURLResponse {
-        print("\(httpResponse)")
-        if 200 <= httpResponse.statusCode
-            && httpResponse.statusCode < 300 {
-          if data != nil {
-            let parser = XMLParser(data: data!)
-            parser.delegate = self
-            if parser.parse() {
-              completion(self.translatedResult, nil)
-            } else {
-              completion(nil, ApiError.parseError)
-            }
-          } else {
-            completion(nil, ApiError.unknownError)
-          }
-        } else {
-          completion(nil, ApiError.responseError)
-        }
+    Alamofire.request(requestURL).response { response in
+      
+      print("translate response: \(response)")
+      
+      guard let result = response.data else {
+        promise.failure(ApiError.unknownError)
+        print("unknownError")
+        return
       }
-    })
+      
+      let parser = XMLParser(data: result)
+      parser.delegate = self
+      if parser.parse() {
+        if let translatedResult = self.translatedResult {
+          promise.success(translatedResult)
+        } else {
+          promise.failure(ApiError.unknownError)
+        }
+      } else {
+        promise.failure(ApiError.parseError)
+      }
+
+    }
+    return promise.future
   }
   
-  func updateHistory(url: URL, body: NSMutableDictionary, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
-    
+  func updateHistory(url: URL, parameters: [String: Any]) -> Future<String, ApiError> {
+    let promise = Promise<String, ApiError>()
     if let apiKey = KeyManager().getValue(key: ApiConstants.updateHistoryApiKey) as? String {
-      let header: [String: String] = [
+      let headers: HTTPHeaders = [
         apiKey: ApiConstants.translateHistoryApiKeyField,
         "application/json": "Content-Type",
         "Content-Type": "Accept"
       ]
-      do {
-        try self.post(url: url, header: NSMutableDictionary(dictionary: header), body: body, completionHandler: { data, response, error in
-          if error != nil {
-            print("\(error! as Error)")
-            completion(nil, ApiError.requestError)
-          } else if let httpResponse = response as? HTTPURLResponse {
-            print("\(httpResponse)")
-            if 200 <= httpResponse.statusCode
-                && httpResponse.statusCode < 300 {
-              if data != nil {
-                let result = String(data: data!, encoding: .utf8)!
-                print(result)
-                completion(result, nil)
-              } else {
-                completion(nil, ApiError.unknownError)
-              }
-            } else {
-              completion(nil, ApiError.responseError)
-            }
-          }
-        })
-      } catch {
-        completion(nil, ApiError.unknownError)
+      
+      Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        
+        guard let result = response.data else {
+          promise.failure(ApiError.unknownError)
+          print("unknownError")
+          return
+        }
+        
+        if let error = response.result.error as? AFError {
+          print("\(error)")
+          promise.failure(ApiError.responseError)
+          return
+        }
+        
+        do {
+          let result = try JSONDecoder().decode(String.self, from: result)
+          print("result: \(result)")
+          promise.success(result)
+        } catch {
+          promise.failure(ApiError.parseError)
+          print("error: \(error)")
+        }
+        
       }
     } else {
-      completion(nil, ApiError.internalError)
+      promise.failure(ApiError.internalError)
     }
+    return promise.future
   }
   
   /// Private Method

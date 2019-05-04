@@ -67,16 +67,14 @@ class TranslateHistoryDao: NSObject {
   
   // insert
   func insert(_ originalText: String, translatedText: String) {
-    DispatchQueue.main.async {
-      let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-      let history = NSEntityDescription.insertNewObject(forEntityName: "TranslateHistory", into: appDelegate.persistentContainer.viewContext) as! TranslateHistory
-      history.original_text = originalText
-      history.translated_text = translatedText
-      history.update_time = Date()
+    let history = NSEntityDescription.insertNewObject(forEntityName: "TranslateHistory", into: appDelegate.persistentContainer.viewContext) as! TranslateHistory
+    history.original_text = originalText
+    history.translated_text = translatedText
+    history.update_time = Date()
     
-      appDelegate.saveContext()
-    }
+    appDelegate.saveContext()
   }
   
   // update if exist

@@ -1,0 +1,20 @@
+PODS:
+  - Alamofire (4.8.2)
+  - BrightFutures (8.0.0)
+
+DEPENDENCIES:
+  - Alamofire
+  - BrightFutures
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - BrightFutures
+
+SPEC CHECKSUMS:
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  BrightFutures: f8427b46feabaf73c5e71ace7d86d65dfbb47696
+
+PODFILE CHECKSUM: 11671cb32e735cb583762d51391bac4b54287f1b
+
+COCOAPODS: 1.6.1

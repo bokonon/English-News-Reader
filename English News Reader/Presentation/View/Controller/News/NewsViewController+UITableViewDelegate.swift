@@ -12,11 +12,14 @@ extension NewsViewController: UITableViewDelegate {
   
   func tableView(_ table: UITableView,didSelectRowAt indexPath: IndexPath) {
     print("performSegue")
-    let url = newsApiModels[indexPath.row].url
-    print(url)
-    webViewUrl = URL(string: url)
-    // launch webview
-    performSegue(withIdentifier: "segue_for_webview", sender: self)
+    if let url = newsApiModels[indexPath.row].url {
+      print(url)
+      webViewUrl = URL(string: url)
+      // launch webview
+      performSegue(withIdentifier: "segue_for_webview", sender: self)
+    } else {
+      print("url is null")
+    }
   }
   
 }

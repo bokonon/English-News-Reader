@@ -27,9 +27,9 @@ class NewsApiModelCell: UITableViewCell {
     
   }
   
-  func setCell(model :NewsApiModel) {
-    self.title!.text = model.title as String
-    self.desc!.text = model.description as String
-    self.publishedAt!.text = model.publishedAt as String
+  func setCell(model :Article) {
+    self.title!.text = model.title
+    self.desc!.text = model.description
+    self.publishedAt!.text = model.publishedAt
   }
 }

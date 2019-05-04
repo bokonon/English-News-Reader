@@ -8,16 +8,16 @@
 
 import Foundation
 
+import BrightFutures
+
 class WebViewControllerPresenter {
     
-  func translate(text: String, to: String, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
-    TranslateUseCase().translate(text: text, to: to) { text, error in
-      completion(text!, error)
-    }
+  func translate(text: String, to: String) -> Future<String, ApiError> {
+     return TranslateUseCase().translate(text: text, to: to)
   }
   
   func saveHistory(_ originalText: String, translatedText: String) {
     TranslateHistoryDao.sharedInstance.insert(originalText, translatedText: translatedText)
   }
-    
+  
 }

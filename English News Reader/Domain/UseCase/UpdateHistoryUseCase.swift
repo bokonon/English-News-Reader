@@ -8,16 +8,19 @@
 
 import Foundation
 
+import BrightFutures
+
 class UpdateHistoryUseCase {
     
   let request: Request = Request()
   
-  func updateHistory(source: String, destination: String, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
+  func updateHistory(source: String, destination: String) -> Future<String, ApiError> {
     let url: URL = URL(string: ApiConstants.updateHistoryUrl)!
-    let body: NSMutableDictionary = NSMutableDictionary()
-    body.setValue(source, forKey: "source")
-    body.setValue(destination, forKey: "destination")
-    request.updateHistory(url: url, body: body, completion: completion)
+    let parameters:[String: Any] = [
+      "source": source,
+      "destination": destination
+    ]
+    return request.updateHistory(url: url, parameters: parameters)
   }
     
 }

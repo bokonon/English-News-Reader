@@ -8,12 +8,12 @@
 
 import Foundation
 
+import BrightFutures
+
 class NewsViewControllerPresenter {
     
-  func getNews(currentPage: Int, completion: @escaping (_ result: Array<NewsApiModel>?, _ error: ApiError?) -> Void) {
-    GetNewsUseCase().getNews(currentPage: currentPage) { result, error in
-      completion(result!, error)
-    }
+  func getNews() -> Future<[Article], ApiError> {
+    return GetNewsUseCase().getNews()
   }
     
 }

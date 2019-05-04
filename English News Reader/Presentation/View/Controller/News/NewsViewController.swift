@@ -14,9 +14,7 @@ class NewsViewController: UIViewController {
     
   @IBOutlet weak var tableView: UITableView!
   
-  var newsApiModels: [NewsApiModel] = []
-  
-  var currentPage: Int = 0
+  var newsApiModels: [Article] = []
   
   var refreshControl: UIRefreshControl = UIRefreshControl()
   
@@ -44,7 +42,7 @@ class NewsViewController: UIViewController {
     tableView.isHidden = true
     self.initIndicator()
     
-    getNews(currentPage: currentPage)
+    getNews()
   }
   
   override func didReceiveMemoryWarning() {
@@ -63,42 +61,37 @@ class NewsViewController: UIViewController {
   
   // MARK: - Public Method -
   
-  public func readMore() {
-    print("readMore")
-    currentPage += 1
-    self.getNews(currentPage: currentPage)
-  }
+//  public func readMore() {
+//    print("readMore")
+//    self.getNews()
+//  }
   
   // MARK: - Private Method -
   
-  private func getNews(currentPage: Int) {
+  private func getNews() {
     indicator.startAnimating()
-    presenter.getNews(currentPage: currentPage) { result, error in
-      if error != nil {
-        print("error on get news : \(error!)")
-        // show error message
-        self.indicator.stopAnimating()
-      } else if result != nil {
+    presenter.getNews()
+      .onSuccess { [unowned self] articles in
         print("append")
-        self.newsApiModels.append(contentsOf: result!)
+        self.newsApiModels.removeAll()
+        self.newsApiModels.append(contentsOf: articles)
+        self.tableView.isHidden = false
+        self.tableView.reloadData()
+        self.refreshControl.endRefreshing()
+        self.indicator.stopAnimating()
+      }.onFailure { [unowned self] error in
+        print("error on get news : \(error)")
+        // show error message
+         self.refreshControl.endRefreshing()
+        self.indicator.stopAnimating()
       }
-      DispatchQueue.global(qos: .default).async {
-        DispatchQueue.main.async {
-          self.tableView.isHidden = false
-          self.tableView.reloadData()
-          self.refreshControl.endRefreshing()
-          self.indicator.stopAnimating()
-        }
-      }
-    }
   }
   
   @objc func refresh(sender: UIRefreshControl) {
     print("refresh")
-    currentPage = 0
     newsApiModels.removeAll()
     tableView.reloadData()
-    self.getNews(currentPage: currentPage)
+    self.getNews()
   }
   
   // prepare indicator

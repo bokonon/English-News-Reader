@@ -8,15 +8,15 @@
 
 import Foundation
 
-class NewsApiModel {
-  var author: String
-  var content: String
-  var description: String
-  var publishedAt: String
+class Article: Codable {
+  var author: String?
+  var content: String?
+  var description: String?
+  var publishedAt: String?
   var source: Source
-  var title: String
-  var url: String
-  var urlToImage: String
+  var title: String?
+  var url: String?
+  var urlToImage: String?
   
   init(author: String, content: String, description: String, publishedAt: String,
        source: Source, title: String, url: String, urlToImage: String) {
@@ -30,9 +30,9 @@ class NewsApiModel {
     self.urlToImage = urlToImage
   }
   
-  class Source {
-    var id: String
-    var name: String
+  class Source: Codable {
+    var id: String?
+    var name: String?
     init (id: String, name: String) {
       self.id = id
       self.name = name

@@ -8,45 +8,45 @@
 
 import Foundation
 
+import BrightFutures
+
 class TranslateUseCase {
     
   let request: Request = Request()
   
-  func translate(text: String, to: String, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
-    self.getToken(text: text) { (token, error) in
-      if error != nil {
-        completion(nil, error!)
-      } else if token != nil {
-        self.translate(text: text, token: token!, to: to) { (result, error) in
-          completion(result, error)
-          if result != nil && result != "" {
-            UpdateHistoryUseCase().updateHistory(source: text, destination: result!) { (result, error) in
-              if let result = result {
-                print(result)
-              }
-            }
-          }
-        }
+  func translate(text: String, to: String) -> Future<String, ApiError> {
+    let promise = Promise<String, ApiError>()
+    self.getToken(text: text).flatMap { token in
+      self.translate(text: text, token: token, to: to)
+    }.onSuccess(DispatchQueue.main.context) { destination in
+      UpdateHistoryUseCase().updateHistory(source: text, destination: destination)
+        .onSuccess { result in
+          print(result)
+        }.onFailure { error in
+          print("error: \(error)")
       }
+      promise.success(destination)
+    }.onFailure(DispatchQueue.main.context) { error in
+      promise.failure(error)
+      print("error: \(error)")
     }
+    return promise.future
   }
   
-  private func getToken(text: String, completion: @escaping (_ token: String?, _ error: ApiError?) -> Void) {
+  private func getToken(text: String) -> Future<String, ApiError> {
     let url: URL = URL(string: ApiConstants.tokenUrl)!
-    let body: NSMutableDictionary = NSMutableDictionary()
-  
-    request.getToken(url: url, body: body, completion: completion)
+    return request.getToken(url: url)
   }
   
-  private func translate(text: String, token: String, to: String, completion: @escaping (_ result: String?, _ error: ApiError?) -> Void) {
+  private func translate(text: String, token: String, to: String) -> Future<String, ApiError> {
     let url: URL = URL(string: ApiConstants.translateUrl)!
     let appidPrefix = ApiConstants.appidPrefix
-    let params: [String: String] = [
+    let parameters: [String: String] = [
       "appid": appidPrefix + token,
       "text": text,
       "to": to
     ]
-    request.translate(url: url, parameters: params as [String : AnyObject], completion: completion)
+    return request.translate(url: url, parameters: parameters as [String : AnyObject])
   }
     
 }

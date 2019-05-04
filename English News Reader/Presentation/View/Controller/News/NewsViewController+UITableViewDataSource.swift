@@ -24,9 +24,9 @@ extension NewsViewController: UITableViewDataSource {
     cell.setCell(model: newsApiModels[indexPath.row])
     
     // when cell is almost last
-    if(newsApiModels.count - 1 <= indexPath.row) {
-      readMore()
-    }
+//    if(newsApiModels.count - 1 <= indexPath.row) {
+//      readMore()
+//    }
     
     return cell
   }
