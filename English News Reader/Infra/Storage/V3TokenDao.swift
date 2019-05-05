@@ -20,7 +20,7 @@ class V3TokenDao: NSObject {
     return Static.instance
   }
   
-  func find() -> Future<V3Token?, StorageError> {
+  func findAsync() -> Future<V3Token?, StorageError> {
     let promise = Promise<V3Token?, StorageError>()
     
     DispatchQueue.global(qos: .default).async {
@@ -45,12 +45,27 @@ class V3TokenDao: NSObject {
   }
   
   // update if exist
-  func updateIfExistOrInsert(token: String, createdAt: Date) {
+  func upsert(token: String, createdAt: Date) {
     if find() != nil {
       update(token: token, createdAt: createdAt)
     } else {
       insert(token: token, createdAt: createdAt)
     }
+  }
+  
+  private func find() -> V3Token? {
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "V3Token")
+    
+    do {
+      let v3Tokens = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest) as! [V3Token]
+      if v3Tokens.count == 1 {
+        return v3Tokens[0]
+      }
+    } catch let error as NSError {
+      print("find error: \(error)")
+    }
+    return nil
   }
   
   // insert
@@ -76,7 +91,7 @@ class V3TokenDao: NSObject {
         v3Token.created_at = createdAt
       }
     } catch let error as NSError {
-      print(error)
+      print("update error: \(error)")
     }
     appDelegate.saveContext()
   }
