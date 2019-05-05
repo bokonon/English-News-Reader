@@ -15,6 +15,7 @@
 		9785A97B2276D36800051CC9 /* NewsViewController+UITableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9785A97A2276D36800051CC9 /* NewsViewController+UITableViewDataSource.swift */; };
 		9785A97E2276D83700051CC9 /* WebViewController+WKNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9785A97D2276D83700051CC9 /* WebViewController+WKNavigationDelegate.swift */; };
 		9785A9852276E60100051CC9 /* HistoryViewController+UITableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9785A9842276E60100051CC9 /* HistoryViewController+UITableViewDataSource.swift */; };
+		97E2246D227E6B5400760114 /* V3TokenDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E2246C227E6B5400760114 /* V3TokenDao.swift */; };
 		BA41F2BF1F979888008F6630 /* LanguageUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA41F2BE1F979888008F6630 /* LanguageUtil.swift */; };
 		BA4415D21F91C823001E4D36 /* TranslateHistoryDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4415D11F91C823001E4D36 /* TranslateHistoryDao.swift */; };
 		BA4415D41F91DE60001E4D36 /* TranslateHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA4415D31F91DE60001E4D36 /* TranslateHistoryCell.swift */; };
@@ -73,6 +74,7 @@
 		9785A97A2276D36800051CC9 /* NewsViewController+UITableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewsViewController+UITableViewDataSource.swift"; sourceTree = "<group>"; };
 		9785A97D2276D83700051CC9 /* WebViewController+WKNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebViewController+WKNavigationDelegate.swift"; sourceTree = "<group>"; };
 		9785A9842276E60100051CC9 /* HistoryViewController+UITableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HistoryViewController+UITableViewDataSource.swift"; sourceTree = "<group>"; };
+		97E2246C227E6B5400760114 /* V3TokenDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V3TokenDao.swift; sourceTree = "<group>"; };
 		BA41F2BE1F979888008F6630 /* LanguageUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageUtil.swift; sourceTree = "<group>"; };
 		BA4415D11F91C823001E4D36 /* TranslateHistoryDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslateHistoryDao.swift; sourceTree = "<group>"; };
 		BA4415D31F91DE60001E4D36 /* TranslateHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslateHistoryCell.swift; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				BA4415D11F91C823001E4D36 /* TranslateHistoryDao.swift */,
+				97E2246C227E6B5400760114 /* V3TokenDao.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -616,6 +619,7 @@
 				BACF00F01F88FCB7003A658E /* KeyManager.swift in Sources */,
 				977CC5AE221835560055B4F8 /* Article.swift in Sources */,
 				9785A97B2276D36800051CC9 /* NewsViewController+UITableViewDataSource.swift in Sources */,
+				97E2246D227E6B5400760114 /* V3TokenDao.swift in Sources */,
 				9785A973227574BB00051CC9 /* UpdateHistoryUseCase.swift in Sources */,
 				BACD423B1F8274F000FF723B /* English_News_Reader.xcdatamodeld in Sources */,
 				9785A97E2276D83700051CC9 /* WebViewController+WKNavigationDelegate.swift in Sources */,

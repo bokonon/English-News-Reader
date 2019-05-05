@@ -15,7 +15,7 @@ class HistoryViewControllerPresenter {
   }
   
   func delete(originalText: String) {
-    TranslateHistoryDao.sharedInstance.delete(originalText)
+    TranslateHistoryDao.sharedInstance.delete(originalText: originalText)
   }
     
 }

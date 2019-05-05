@@ -53,3 +53,19 @@ extension ApiError: LocalizedError{
     }
   }
 }
+
+enum StorageError: Error {
+  case dbError
+  case unknownError
+}
+
+extension StorageError: LocalizedError{
+  var errorDescription:String? {
+    switch self {
+    case .dbError:
+      return "db error"
+    case .unknownError:
+      return "unknown error"
+    }
+  }
+}

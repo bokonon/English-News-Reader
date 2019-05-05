@@ -14,7 +14,7 @@ class UpdateHistoryUseCase {
     
   let request: Request = Request()
   
-  func updateHistory(source: String, destination: String) -> Future<String, ApiError> {
+  func updateHistory(source: String, destination: String) -> Future<UpdateHistoryResult, ApiError> {
     let url: URL = URL(string: ApiConstants.updateHistoryUrl)!
     let parameters:[String: Any] = [
       "source": source,

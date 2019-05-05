@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13240" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.99" systemVersion="18E226" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="TranslateHistory" representedClassName="TranslateHistory" syncable="YES" codeGenerationType="class">
         <attribute name="original_text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="translated_text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="update_time" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
+    <entity name="V3Token" representedClassName="V3Token" syncable="YES" codeGenerationType="class">
+        <attribute name="created_at" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="token" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="TranslateHistory" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="V3Token" positionX="-63" positionY="9" width="128" height="75"/>
     </elements>
 </model>

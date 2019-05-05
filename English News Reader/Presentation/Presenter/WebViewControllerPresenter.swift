@@ -16,8 +16,4 @@ class WebViewControllerPresenter {
      return TranslateUseCase().translate(text: text, to: to)
   }
   
-  func saveHistory(_ originalText: String, translatedText: String) {
-    TranslateHistoryDao.sharedInstance.insert(originalText, translatedText: translatedText)
-  }
-  
 }

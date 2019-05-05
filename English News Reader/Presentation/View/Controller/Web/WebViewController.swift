@@ -169,10 +169,6 @@ class WebViewController: UIViewController {
       .onSuccess { [unowned self] text in
         self.stopIndicator()
         label.text = text
-        if (text != "") {
-          // save data
-          self.presenter.saveHistory(srcText, translatedText: text)
-        }
       }.onFailure { [unowned self] error in
         self.stopIndicator()
         label.text = error.localizedDescription

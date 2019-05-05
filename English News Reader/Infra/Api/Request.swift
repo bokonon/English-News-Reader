@@ -60,6 +60,11 @@ struct NewResponseObject: Codable {
   var articles: [Article]
 }
 
+struct UpdateHistoryResult: Codable {
+  var reason: String
+  var result: Bool
+}
+
 class Request: NSObject, XMLParserDelegate {
     
   let session: URLSession = URLSession.shared
@@ -165,13 +170,13 @@ class Request: NSObject, XMLParserDelegate {
     return promise.future
   }
   
-  func updateHistory(url: URL, parameters: [String: Any]) -> Future<String, ApiError> {
-    let promise = Promise<String, ApiError>()
+  func updateHistory(url: URL, parameters: [String: Any]) -> Future<UpdateHistoryResult, ApiError> {
+    let promise = Promise<UpdateHistoryResult, ApiError>()
     if let apiKey = KeyManager().getValue(key: ApiConstants.updateHistoryApiKey) as? String {
       let headers: HTTPHeaders = [
-        apiKey: ApiConstants.translateHistoryApiKeyField,
-        "application/json": "Content-Type",
-        "Content-Type": "Accept"
+        ApiConstants.translateHistoryApiKeyField:apiKey,
+        "Content-Type":"application/json",
+        "Accept":"Content-Type"
       ]
       
       Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
@@ -189,7 +194,7 @@ class Request: NSObject, XMLParserDelegate {
         }
         
         do {
-          let result = try JSONDecoder().decode(String.self, from: result)
+          let result = try JSONDecoder().decode(UpdateHistoryResult.self, from: result)
           print("result: \(result)")
           promise.success(result)
         } catch {

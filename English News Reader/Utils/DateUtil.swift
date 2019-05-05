@@ -36,4 +36,14 @@ class DateUtil {
     dateFormatter.timeZone = TimeZone(identifier: timeZone)
     return dateFormatter.string(from: date)
   }
+  
+  static func getFormatedDate(srcDate: String) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    //        dateFormatter.timeZone = TimeZone(abbreviation: "GMT+0:00")
+    let date = dateFormatter.date(from: srcDate)
+    dateFormatter.dateFormat = "MM-dd-yyyy"
+    let dstDate = dateFormatter.string(from: date!)
+    return dstDate
+  }
 }

@@ -6,13 +6,13 @@
 //  Copyright © 2017年 yuji shimada. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreData
+import UIKit
+
 
 class TranslateHistoryDao: NSObject {
     
-  var readDataList = [NSManagedObject]()
+//  var readDataList = [NSManagedObject]()
   
   class var sharedInstance :TranslateHistoryDao {
     struct Static {
@@ -45,7 +45,7 @@ class TranslateHistoryDao: NSObject {
   }
   
   // find with original word
-  func find(_ originalText: String) -> [TranslateHistory] {
+  func find(originalText: String) -> [TranslateHistory] {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TranslateHistory")
     let predicate = NSPredicate(format: "original_text = %@", originalText)
@@ -65,8 +65,25 @@ class TranslateHistoryDao: NSObject {
     return [TranslateHistory]()
   }
   
+  // update if exist
+  func upsert(originalText: String, translatedText: String) {
+    let histories = self.find(originalText: originalText)
+    
+    for history in histories {
+      print("\(String(describing: history.original_text)) \(String(describing: history.translated_text)) \(String(describing: history.update_time))")
+    }
+    
+    if histories.isEmpty {
+      print("insert : ", originalText)
+      self.insert(originalText: originalText, translatedText: translatedText)
+    } else {
+      print("update : ", originalText)
+      self.update(originalText: originalText)
+    }
+  }
+  
   // insert
-  func insert(_ originalText: String, translatedText: String) {
+  private func insert(originalText: String, translatedText: String) {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     let history = NSEntityDescription.insertNewObject(forEntityName: "TranslateHistory", into: appDelegate.persistentContainer.viewContext) as! TranslateHistory
@@ -77,26 +94,8 @@ class TranslateHistoryDao: NSObject {
     appDelegate.saveContext()
   }
   
-  // update if exist
-  func updateIfExistOrInsert(_ originalText: String, translatedText: String) {
-    let histories = find(originalText)
-  
-    for history in histories {
-      print("\(String(describing: history.original_text)) \(String(describing: history.translated_text)) \(String(describing: history.update_time))")
-    }
-  
-    if histories.isEmpty {
-      print("insert : ", originalText)
-      insert(originalText, translatedText: translatedText)
-    } else {
-      print("update : ", originalText)
-      update(originalText)
-    }
-    
-  }
-  
   // update
-  func update(_ originalText: String) {
+  private func update(originalText: String) {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TranslateHistory")
     let predicate = NSPredicate(format: "original_word = %@", originalText)
@@ -114,7 +113,7 @@ class TranslateHistoryDao: NSObject {
   }
   
   // delete
-  func delete(_ originalText: String) {
+  func delete(originalText: String) {
     print("remove", "originalText : "+originalText)
   
     let appDelegate = UIApplication.shared.delegate as! AppDelegate

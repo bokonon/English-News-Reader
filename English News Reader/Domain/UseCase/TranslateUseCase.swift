@@ -16,12 +16,13 @@ class TranslateUseCase {
   
   func translate(text: String, to: String) -> Future<String, ApiError> {
     let promise = Promise<String, ApiError>()
-    self.getToken(text: text).flatMap { token in
+    self.getToken(text: text).flatMap { token -> Future<String, ApiError> in
       self.translate(text: text, token: token, to: to)
     }.onSuccess(DispatchQueue.main.context) { destination in
+      TranslateHistoryDao.sharedInstance.upsert(originalText: text, translatedText: destination)
       UpdateHistoryUseCase().updateHistory(source: text, destination: destination)
         .onSuccess { result in
-          print(result)
+          print("result: \(result)")
         }.onFailure { error in
           print("error: \(error)")
       }
